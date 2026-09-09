@@ -49,19 +49,34 @@ function theme_aurora_get_main_scss_content($theme) {
     $boosttheme = theme_config::load('boost');
     $scss = theme_boost_get_main_scss_content($theme->settings->preset ? $theme : $boosttheme);
 
-    // Append Aurora overrides last so they win over the preset.
-    $scss .= "\n" . file_get_contents($CFG->dirroot . '/theme/aurora/scss/post.scss');
-
-    // Identity primitives and course skin appended AFTER post.scss so they win.
-    // Concatenated directly (ScssPhp @import does not resolve theme scss/ paths).
-    $extrapartials = [
-        'scss/components/_ui-primitives.scss',
-        'scss/components/_course-incourse.scss',
+    // Append Aurora SCSS last so it wins over the boost preset.
+    //
+    // We concatenate the partials directly via file_get_contents() instead of
+    // relying on ScssPhp @import resolution inside main.scss: core_scss does
+    // not set an import path for the theme scss/ dir on this Moodle build, so
+    // every @import in main.scss (components/tokens, post-legacy, …) silently
+    // fails to resolve and the compiled CSS ships boost-only. The order below
+    // mirrors main.scss: tokens → base → buttons → progress → post-legacy
+    // (post-legacy is the canonical full skin).
+    $scssdir = $CFG->dirroot . '/theme/aurora/scss';
+    $partials = [
+        'components/_tokens.scss',
+        'components/_base.scss',
+        'components/_buttons.scss',
+        'components/_progress.scss',
+        'components/_icons.scss',
+        'post-legacy.scss',
+        // Page-level skins appended AFTER post-legacy so they win.
+        'components/_calendar-page.scss',
+        // Identity primitives: erase legacy purple from all learner surfaces.
+        'components/_ui-primitives.scss',
+        // Course & in-course skin: green active states, paper sections.
+        'components/_course-incourse.scss',
         // Frontpage landing sections: catalogue, steps, value, CTA bar.
-        'scss/components/_frontpage-sections.scss',
+        'components/_frontpage-sections.scss',
     ];
-    foreach ($extrapartials as $partial) {
-        $path = $CFG->dirroot . '/theme/aurora/' . $partial;
+    foreach ($partials as $partial) {
+        $path = $scssdir . '/' . $partial;
         if (is_readable($path)) {
             $scss .= "\n" . file_get_contents($path);
         }
@@ -225,7 +240,6 @@ function theme_aurora_course_image_url($course): string {
 function theme_aurora_pluginfile($course, $cm, $context, $filearea, $args, $forcedownload, array $options = []) {
     if ($context->contextlevel == CONTEXT_SYSTEM && (
         $filearea === 'logo' ||
-        $filearea === 'favicon' ||
         $filearea === 'backgroundimage' ||
         $filearea === 'loginbackgroundimage'
     )) {

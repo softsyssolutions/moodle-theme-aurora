@@ -25,7 +25,7 @@ defined('MOODLE_INTERNAL') || die();
  *
  * Aurora is a pure skin: it adds NO custom layout or page chrome. This renderer
  * only:
- *  - injects the Jost web font (the Aurora Whiteboard typeface),
+ *  - injects the Jost web font (the Aurora type face),
  *  - resolves the favicon against the child theme, and
  *  - tags <body> with the `aurora-shell` class so post.scss can scope its
  *    restyle rules to Aurora pages.
@@ -73,7 +73,6 @@ class core_renderer extends \theme_boost\output\core_renderer {
         $output = parent::standard_head_html();
         $output .= '<link rel="preconnect" href="https://fonts.googleapis.com">' . "\n";
         $output .= '<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>' . "\n";
-        // Standup whiteboard world: marker script + UI sans (Impeccable direction safer-whiteboard).
         $output .= '<link rel="stylesheet" href="https://fonts.googleapis.com/css2?'
             . 'family=Jost:wght@400;500;600;700&family=Nanum+Brush+Script&family=Nanum+Pen+Script&display=swap">' . "\n";
         return $output;
@@ -112,7 +111,7 @@ class core_renderer extends \theme_boost\output\core_renderer {
     }
 
     /**
-     * Prepend the Aurora welcome hero on the correct layout. The hero lives INSIDE
+     * Prepend the Aurora welcome hero on the dashboard. The hero lives INSIDE
      * the content column (Boost renders full_header above #region-main-box), so
      * it never touches the native navbar, course-index drawer or block drawers.
      *
@@ -139,7 +138,7 @@ class core_renderer extends \theme_boost\output\core_renderer {
             }
         }
 
-        // Dashboard (/my/): compact hero + 3 stat cards (logged-in only).
+        // Dashboard (/my/): compact hero + 3 stat cards.
         if ($layout === 'mydashboard'
                 && isloggedin() && !isguestuser()) {
             try {
@@ -243,12 +242,20 @@ class core_renderer extends \theme_boost\output\core_renderer {
                 return $item['id'] !== $continue['id'];
             }));
         }
+        $inprogresstotal = count($inprogress);
+        $completedtotal = count($completed);
         $inprogress = array_slice($inprogress, 0, $lanecap);
         $completed = array_slice($completed, 0, $lanecap);
 
         $awards = [];
+        $awardstotal = 0;
         try {
-            $badges = badges_get_user_badges($USER->id, 0, 0, $lanecap);
+            $badges = badges_get_user_badges($USER->id, 0, 0, 100);
+            $awardstotal = is_array($badges) || $badges instanceof \Traversable ? count($badges) : 0;
+            if ($badges instanceof \Traversable) {
+                $badges = iterator_to_array($badges);
+            }
+            $badges = array_slice(array_values($badges ?: []), 0, $lanecap);
             foreach ($badges as $badge) {
                 $badgeobj = new \badge($badge->id);
                 $imageurl = moodle_url::make_pluginfile_url(
@@ -272,6 +279,7 @@ class core_renderer extends \theme_boost\output\core_renderer {
             }
         } catch (\Throwable $e) {
             $awards = [];
+            $awardstotal = 0;
         }
 
         $hascontinue = ($continue !== null);
@@ -300,10 +308,145 @@ class core_renderer extends \theme_boost\output\core_renderer {
             'inprogress' => $inprogress,
             'completed' => $completed,
             'awards' => $awards,
+            'inprogresscount' => $inprogresstotal,
+            'completedcount' => $completedtotal,
+            'awardscount' => $awardstotal,
             'trayurl' => $this->image_url('whiteboard/tray-dashboard', 'theme_aurora')->out(false),
             // Keep legacy keys for any leftover callers.
             'mycoursesurl' => (new moodle_url('/my/courses.php'))->out(false),
             'mycourseslabel' => get_string('navmycourses', 'theme_aurora'),
+        ];
+    }
+
+    /**
+     * Build the full-width frontpage hero context from REAL learner data.
+     *
+     * Same data sources as the dashboard hero (enrol_get_my_courses +
+     * core_completion + badge_issued) so the public home and /my/ never drift,
+     * plus the enrolled-course list (with per-course completion % and overview
+     * image) that feeds the bento grid. The hero "Continue" CTA targets the
+     * in-progress course with the highest completion.
+     *
+     * @return array
+     */
+    public function aurora_frontpage_hero_context(): array {
+        global $USER, $CFG, $DB;
+        require_once($CFG->dirroot . '/lib/enrollib.php');
+        require_once($CFG->libdir . '/completionlib.php');
+
+        $firstname = (isloggedin() && !isguestuser()) ? $USER->firstname : '';
+
+        $inprogress = 0;
+        $completed = 0;
+        $continue = null;
+        $coursesforbento = [];
+
+        try {
+            $courses = enrol_get_my_courses(
+                ['id', 'fullname', 'shortname', 'visible', 'enablecompletion', 'cacherev', 'summary', 'summaryformat', 'category'],
+                'visible DESC, fullname ASC',
+                0,
+                []
+            );
+            foreach ($courses as $course) {
+                if ($course->id == SITEID) {
+                    continue;
+                }
+                $coursecontext = \context_course::instance($course->id);
+                $pct = \core_completion\progress::get_course_progress_percentage($course, $USER->id);
+                if ($pct === null) {
+                    $pct = 0;
+                }
+                $pct = (int) round($pct);
+                $isdone = ($pct >= 100);
+                if ($isdone) {
+                    $completed++;
+                } else {
+                    $inprogress++;
+                }
+                if (!$isdone && ($continue === null || $pct > $continue['pct'])) {
+                    $continue = [
+                        'url' => (new moodle_url('/course/view.php', ['id' => $course->id]))->out(false),
+                        'pct' => $pct,
+                    ];
+                }
+                // Build the bento entry (limit to 6 cards for the home grid).
+                if (count($coursesforbento) < 6) {
+                    $categoryname = '';
+                    if (!empty($course->category)) {
+                        $catname = $DB->get_field('course_categories', 'name', ['id' => $course->category]);
+                        if ($catname !== false) {
+                            $categoryname = format_string($catname, true, ['context' => $coursecontext]);
+                        }
+                    }
+                    // Course overview image (real — overviewfiles).
+                    $imageurl = '';
+                    try {
+                        $listelement = new \core_course_list_element($course);
+                        foreach ($listelement->get_course_overviewfiles() as $file) {
+                            if ($file->is_valid_image()) {
+                                $imageurl = moodle_url::make_pluginfile_url(
+                                    $file->get_contextid(),
+                                    $file->get_component(),
+                                    $file->get_filearea(),
+                                    $file->get_itemid(),
+                                    $file->get_filepath(),
+                                    $file->get_filename()
+                                )->out(false);
+                                break;
+                            }
+                        }
+                    } catch (\Throwable $e) {
+                        $imageurl = '';
+                    }
+                    $coursesforbento[] = [
+                        'id' => $course->id,
+                        'fullname' => format_string($course->fullname, true, ['context' => $coursecontext]),
+                        'category' => $categoryname,
+                        'hascategory' => $categoryname !== '',
+                        'progress' => $pct,
+                        'hasprogress' => $pct > 0,
+                        'imageurl' => $imageurl,
+                        'viewurl' => (new moodle_url('/course/view.php', ['id' => $course->id]))->out(false),
+                        // First in-progress course is the featured (2x2) card.
+                        'featured' => (!$isdone && $continue !== null
+                            && $continue['pct'] === $pct && empty(array_filter($coursesforbento, function ($c) { return !empty($c['featured']); }))),
+                    ];
+                }
+            }
+        } catch (\Throwable $e) {
+            $continue = null;
+            $coursesforbento = [];
+        }
+
+        $awards = 0;
+        try {
+            $awards = $DB->count_records('badge_issued', ['userid' => $USER->id]);
+        } catch (\Throwable $e) {
+            $awards = 0;
+        }
+
+        $hascontinue = ($continue !== null);
+
+        return [
+            'greeting' => get_string('default_greeting', 'theme_aurora'),
+            'firstname' => $firstname,
+            'hasfirstname' => $firstname !== '',
+            // Hero CTAs.
+            'mycoursesurl' => (new moodle_url('/my/courses.php'))->out(false),
+            'mycourseslabel' => get_string('navmycourses', 'theme_aurora'),
+            'hascontinue' => $hascontinue,
+            'continueurl' => $hascontinue ? $continue['url'] : '',
+            'continuelabel' => get_string('herocontinue', 'theme_aurora'),
+            // Stats grid (4 cards — the 4th is awards so the grid is balanced).
+            'stats' => [
+                ['value' => $inprogress, 'label' => get_string('statinprogress', 'theme_aurora'), 'variant' => 'primary'],
+                ['value' => $completed, 'label' => get_string('statcompleted', 'theme_aurora'), 'variant' => 'success'],
+                ['value' => $awards, 'label' => get_string('statawards', 'theme_aurora'), 'variant' => 'accent'],
+            ],
+            // Bento grid (real enrolled courses).
+            'courses' => $coursesforbento,
+            'hascourses' => !empty($coursesforbento),
         ];
     }
 
@@ -412,6 +555,7 @@ class core_renderer extends \theme_boost\output\core_renderer {
         }
 
         $initial = \core_text::strtoupper(\core_text::substr(trim($fullname), 0, 1));
+
         $imageurl = theme_aurora_course_image_url($course);
 
         // Viewable lesson count + active enrolment count (real).

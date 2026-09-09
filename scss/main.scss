@@ -1,0 +1,80 @@
+// =====================================================================
+// Aurora Main SCSS
+// Modular entry point that imports all component partials
+// =====================================================================
+
+// This file is part of Moodle - http://moodle.org/
+//
+// Aurora is a PURE SKIN over Boost. It ships no custom layout or shell DOM:
+// Boost's native navbar, course-index drawer and block drawers render
+// untouched. Every rule here only RESTYLES real Moodle blocks / course data.
+// No data is ever faked.
+
+// =====================================================================
+// 1. DESIGN TOKENS
+// =====================================================================
+@import 'components/tokens';
+
+// =====================================================================
+// 2. BASE STYLES
+// =====================================================================
+@import 'components/base';
+
+// =====================================================================
+// 3. COMPONENTS
+// =====================================================================
+@import 'components/buttons';
+@import 'components/progress';
+
+// =====================================================================
+// 4. DASHBOARD COMPONENTS
+// =====================================================================
+// Hero, Stats, Course Cards, etc. will be extracted here.
+// STATUS: currently still inlined in post-legacy.scss (aurora-hero,
+// aurora-stats, aurora-course-hero). Extract into:
+//   components/_dashboard-hero.scss
+//   components/_course-hero.scss
+// when the modular migration resumes.
+
+// =====================================================================
+// 5. BLOCKS OVERRIDES
+// =====================================================================
+// Timeline, Calendar, Badges, etc. will be extracted here.
+// STATUS: currently still inlined in post-legacy.scss (block_timeline,
+// block_calendar_month, block_badges, block_myoverview…).
+
+// =====================================================================
+// 6. LAYOUTS
+// =====================================================================
+// Full-width, login, etc. will be extracted here.
+// STATUS: the full-width grid + hero_extendido + stats_grid + courses_bento
+// live in post-legacy.scss scoped to body.layout-fullwidth. Extract into:
+//   layouts/_fullwidth-grid.scss
+//   layouts/_fullwidth-hero.scss
+//   layouts/_fullwidth-stats.scss
+//   layouts/_fullwidth-bento.scss
+// when the modular migration resumes.
+
+// =====================================================================
+// 7. DARK MODE (future)
+// =====================================================================
+// Not activated. See components/_tokens.scss for the rationale — a premature
+// prefers-color-scheme override flips the canvas dark while components are
+// still light. Activate only with a full dual-palette token set.
+
+// =====================================================================
+// CANONICAL IMPORT
+// post-legacy.scss is the single source of truth for every Aurora rule today.
+// It is appended AFTER the boost preset (via theme_aurora_get_main_scss_content
+// in lib.php) so its rules win. The modular files above (_tokens, _base,
+// _buttons, _progress) are imported first and define shared primitives;
+// post-legacy then redefines :root tokens fresh and owns the full skin.
+// Do NOT remove this import until the extraction above is complete.
+// =====================================================================
+@import 'post-legacy';
+
+// =====================================================================
+// PAGE-LEVEL SKINS (concatenated after post-legacy via lib.php)
+// =====================================================================
+@import 'components/icons';
+@import 'components/calendar-page';

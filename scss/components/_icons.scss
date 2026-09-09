@@ -1,0 +1,62 @@
+// Lucide inline SVG icons.
+//
+// Lucide icons render as inline <svg class="icon lucide"> with
+// stroke="currentColor", so they inherit the surrounding text colour
+// (navbar, drawers, buttons, calendar pills…) exactly like the proposal.
+
+svg.icon.lucide {
+    width: 16px;
+    height: 16px;
+    vertical-align: -0.15em;
+    flex-shrink: 0;
+}
+
+// FontAwesome sized icons via font-size; Lucide needs explicit geometry
+// wherever Moodle sets icon font sizes.
+.icon-size-2 svg.icon.lucide,
+svg.icon.lucide.icon-size-2 {
+    width: 20px;
+    height: 20px;
+}
+
+.icon-size-3 svg.icon.lucide,
+svg.icon.lucide.icon-size-3 {
+    width: 24px;
+    height: 24px;
+}
+
+.icon-size-4 svg.icon.lucide,
+svg.icon.lucide.icon-size-4 {
+    width: 28px;
+    height: 28px;
+}
+
+.icon-size-5 svg.icon.lucide,
+svg.icon.lucide.icon-size-5 {
+    width: 32px;
+    height: 32px;
+}
+
+.icon-size-6 svg.icon.lucide,
+svg.icon.lucide.icon-size-6 {
+    width: 40px;
+    height: 40px;
+}
+
+.icon-size-7 svg.icon.lucide,
+svg.icon.lucide.icon-size-7 {
+    width: 48px;
+    height: 48px;
+}
+
+// Loading spinner (i/loading, i/loading_small, i/progressbar).
+.aurora-icon-spin {
+    animation: aurora-icon-spin 0.9s linear infinite;
+    transform-origin: center;
+}
+
+@keyframes aurora-icon-spin {
+    to {
+        transform: rotate(360deg);
+    }
+}

@@ -1,0 +1,49 @@
+{{!
+    This file is part of Moodle - http://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+}}
+{{!
+    @template theme_aurora/pix_icon_lucide
+
+    Renders a pix icon as an inline Lucide SVG. Unmapped icons fall back
+    to the standard pix <img> markup.
+
+    Context variables required for this template:
+    * svg - inner SVG markup of the Lucide icon (mapped icons only)
+    * title - icon title
+    * alt - accessible label (empty for decorative icons)
+    * extraclasses - extra css classes
+    * unmappedIcon - whether to render the standard <img> fallback
+    * attributes - attributes for the <img> fallback
+    * aria-hidden - whether the icon is hidden from assistive technologies
+
+    Example context (json):
+    {
+        "svg": "<path d=\"M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z\"/>",
+        "title": "Home",
+        "alt": "Home",
+        "extraclasses": "",
+        "unmappedIcon": false,
+        "aria-hidden": false
+    }
+
+}}
+{{^unmappedIcon}}
+<svg class="icon lucide {{extraclasses}}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"{{#aria-hidden}} aria-hidden="true"{{/aria-hidden}}{{^aria-hidden}}{{#alt}} role="img" aria-label="{{alt}}"{{/alt}}{{/aria-hidden}}{{#title}} title="{{title}}"{{/title}}>{{{svg}}}</svg>
+{{/unmappedIcon}}
+{{#unmappedIcon}}
+{{! We cannot include the pix_icon template directly here because we don't have all the mustache helpers loaded. }}
+<img class="icon {{extraclasses}}" {{#attributes}}{{name}}="{{value}}" {{/attributes}}/>
+{{/unmappedIcon}}

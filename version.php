@@ -24,7 +24,7 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->version   = 2026090850;
+$plugin->version   = 2026090900;
 $plugin->requires  = 2024100100;
 $plugin->component = 'theme_aurora';
 $plugin->dependencies = [

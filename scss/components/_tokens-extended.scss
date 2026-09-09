@@ -1,0 +1,116 @@
+// =====================================================================
+// Aurora Extended Tokens
+// Additional CSS custom properties for runtime theming support
+// Extends _tokens.scss with comprehensive theming variables
+// =====================================================================
+
+:root {
+    // Extended brand colors with opacity variants
+    --aurora-primary-light: #8b7dff;
+    --aurora-primary-dark: #5a4ce0;
+    --aurora-accent-light: #ff8a7b;
+    --aurora-accent-dark: #e55a4a;
+    --aurora-secondary-light: #b9a3fa;
+    --aurora-secondary-dark: #8a6ce8;
+
+    // Gradient definitions (para dark mode switching)
+    --aurora-gradient-hero-overlay: radial-gradient(circle at 20% 50%, rgba(255, 255, 255, 0.08) 0%, transparent 50%),
+                                          radial-gradient(circle at 80% 80%, rgba(167, 139, 250, 0.15) 0%, transparent 40%);
+    --aurora-gradient-card-surface: linear-gradient(135deg, #fff 0%, #faf9ff 100%);
+    --aurora-gradient-stat-bg: linear-gradient(135deg, #fff 0%, #faf9ff 100%);
+    --aurora-gradient-calendar-cell: linear-gradient(135deg, #f8f7ff 0%, #f0ecfe 100%);
+
+    // Shadow definitions (para dark mode switching)
+    --aurora-shadow-hero: 0 32px 64px -28px rgba(109, 93, 246, 0.5),
+                       0 0 0 1px rgba(255, 255, 255, 0.1) inset;
+    --aurora-shadow-card-hover: 0 16px 48px rgba(109, 93, 246, 0.12);
+    --aurora-shadow-drawer: 0 2px 8px rgba(109, 93, 246, 0.04);
+    --aurora-shadow-button: 0 4px 14px rgba(109, 93, 246, 0.25);
+    --aurora-shadow-button-hover: 0 8px 20px rgba(109, 93, 246, 0.35);
+    --aurora-shadow-block: 0 2px 8px rgba(109, 93, 246, 0.04);
+    --aurora-shadow-block-hover: 0 8px 24px rgba(109, 93, 246, 0.08);
+
+    // Orb gradients (hero decoration)
+    --aurora-orb-1: radial-gradient(circle, rgba(255, 255, 255, 0.12) 0%, transparent 70%);
+    --aurora-orb-2: radial-gradient(circle, rgba(167, 139, 250, 0.12) 0%, transparent 60%);
+    --aurora-orb-3: radial-gradient(circle, rgba(255, 255, 255, 0.06) 0%, transparent 50%);
+
+    // Text colors by semantic use
+    --aurora-text-heading: #1a1626;
+    --aurora-text-body: #1a1626;
+    --aurora-text-muted: #8b8598;
+    --aurora-text-link: #6d5df6;
+    --aurora-text-link-hover: #5a4ce0;
+    --aurora-text-on-primary: #ffffff;
+    --aurora-text-on-accent: #ffffff;
+
+    // Background colors by semantic use
+    --aurora-bg-canvas: #f8f7fc;
+    --aurora-bg-card: #ffffff;
+    --aurora-bg-input: #ffffff;
+    --aurora-bg-hover: rgba(109, 93, 246, 0.05);
+    --aurora-bg-active: rgba(109, 93, 246, 0.1);
+
+    // Border colors by semantic use
+    --aurora-border-default: #e8e4f0;
+    --aurora-border-strong: #d8d4e8;
+    --aurora-border-focus: var(--aurora-primary);
+    --aurora-border-error: #ef4444;
+    --aurora-border-success: var(--aurora-success);
+
+    // Animation timings
+    --aurora-transition-fast: 0.15s;
+    --aurora-transition-normal: 0.2s;
+    --aurora-transition-slow: 0.3s;
+    --aurora-easing-default: cubic-bezier(0.4, 0, 0.2, 1);
+    --aurora-easing-in-out: cubic-bezier(0.4, 0, 0.6, 1);
+
+    // Z-index layers
+    --aurora-z-base: 1;
+    --aurora-z-dropdown: 100;
+    --aurora-z-sticky: 200;
+    --aurora-z-fixed: 300;
+    --aurora-z-modal: 400;
+    --aurora-z-popover: 500;
+    --aurora-z-tooltip: 600;
+}
+
+// Dark mode - ready para implementación futura
+// Descomentar cuando el sistema esté listo
+/*
+@media (prefers-color-scheme: dark) {
+    :root {
+        // Dark brand colors
+        --aurora-primary: #8b7dff;
+        --aurora-accent: #ff8a7b;
+        --aurora-secondary: #b9a3fa;
+
+        // Dark neutrals
+        --aurora-bg: #0d1117;
+        --aurora-card: #161b22;
+        --aurora-border: rgba(255, 255, 255, 0.1);
+        --aurora-border-dark: rgba(255, 255, 255, 0.15);
+        --aurora-text: #ffffff;
+        --aurora-text-heading: #ffffff;
+        --aurora-text-body: #e6edf3;
+        --aurora-text-muted: #8b949e;
+        --aurora-muted-2: #6e7681;
+
+        // Dark backgrounds
+        --aurora-bg-canvas: #0d1117;
+        --aurora-bg-card: #161b22;
+        --aurora-bg-input: #21262d;
+        --aurora-bg-hover: rgba(139, 125, 255, 0.1);
+        --aurora-bg-active: rgba(139, 125, 255, 0.2);
+
+        // Dark gradients
+        --aurora-gradient-card-surface: linear-gradient(135deg, #161b22 0%, #1a1f26 100%);
+        --aurora-gradient-stat-bg: linear-gradient(135deg, #1a1f26 0%, #21262d 100%);
+        --aurora-gradient-calendar-cell: linear-gradient(135deg, #21262d 0%, #2d333b 100%);
+
+        // Dark shadows (lighter on dark bg)
+        --aurora-shadow-card-hover: 0 16px 48px rgba(0, 0, 0, 0.4);
+        --aurora-shadow-button: 0 4px 14px rgba(139, 125, 255, 0.3);
+    }
+}
+*/

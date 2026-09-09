@@ -1,0 +1,213 @@
+{{!
+    This file is part of Moodle - http://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+}}
+{{!
+    @template theme_aurora/fullwidth
+
+    Full-width CSS-Grid layout. A faithful copy of theme_boost/drawers.mustache
+    that preserves EVERY piece of Boost machinery:
+
+      * theme_boost/head, standard_top_of_body_html
+      * theme_boost/navbar
+      * the course-index drawer (theme_boost/drawer, left, off-canvas)
+      * the side-pre block drawer (theme_boost/drawer, right, off-canvas)
+      * drawer-toggles with their data-toggler / data-target / data-action hooks
+      * #page[data-region="mainpage"] with show-drawer-left/right classes
+      * output.full_header, secondary-navigation (moremenu), #page-content,
+        #region-main-box, #region-main, activity header, overflow, main_content,
+        course_content_header/footer, footer, standard_after_main_region_html
+      * the RequireJS bootstrap (theme_boost/loader + theme_boost/drawer)
+
+    The ONLY structural additions vs Boost:
+      1. #page also gets the `layout-fullwidth` class (body already has it).
+      2. Inside #page-content, a <div class="aurora-content-grid"> wraps
+         #region-main-box and a new <aside class="aurora-side-post"> holding the
+         side-post blocks. post.scss turns this wrapper into a CSS Grid so the
+         right rail is a real inline column (320px) on desktop.
+
+    The center column is NOT a block region: it is the genuine page content
+    emitted by output.main_content(). Only side-pre and side-post are block
+    regions. Blocks placed in side-pre show in the native off-canvas block
+    drawer; blocks placed in side-post show in the inline right rail.
+
+    Example context (json):
+    {
+        "sitename": "Moodle",
+        "output": { "doctype": "<!DOCTYPE html>", "page_title": "Test", "main_content": "<h1>Hi</h1>" },
+        "bodyattributes": "",
+        "sidepreblocks": "<div data-block='timeline'>...</div>",
+        "sidepostblocks": "<div data-block='html'>...</div>",
+        "hasblocks": true,
+        "hassidepost": true,
+        "courseindexopen": true,
+        "blockdraweropen": false,
+        "courseindex": "<nav>...</nav>",
+        "primarymoremenu": {},
+        "secondarymoremenu": false,
+        "mobileprimarynav": [],
+        "usermenu": {},
+        "langmenu": false,
+        "forceblockdraweropen": false,
+        "regionmainsettingsmenu": "",
+        "hasregionmainsettingsmenu": false,
+        "overflow": "",
+        "headercontent": {},
+        "addblockbutton": ""
+    }
+}}
+{{> theme_boost/head }}
+
+<body {{{ bodyattributes }}}>
+{{> core/local/toast/wrapper}}
+<div id="page-wrapper" class="d-print-block">
+
+    {{{ output.standard_top_of_body_html }}}
+
+    {{> theme_boost/navbar }}
+    {{#courseindex}}
+        {{< theme_boost/drawer }}
+            {{$id}}theme_boost-drawers-courseindex{{/id}}
+            {{$drawerheadercontent}}
+                {{> theme_boost/courseindexdrawercontrols}}
+            {{/drawerheadercontent}}
+            {{$drawerclasses}}drawer drawer-left {{#courseindexopen}}show{{/courseindexopen}}{{/drawerclasses}}
+            {{$drawercontent}}
+                {{{courseindex}}}
+            {{/drawercontent}}
+            {{$drawerpreferencename}}drawer-open-index{{/drawerpreferencename}}
+            {{$drawerstate}}show-drawer-left{{/drawerstate}}
+            {{$tooltipplacement}}right{{/tooltipplacement}}
+            {{$closebuttontext}}{{#str}}closecourseindex, core{{/str}}{{/closebuttontext}}
+        {{/ theme_boost/drawer}}
+    {{/courseindex}}
+    {{#hasblocks}}
+        {{< theme_boost/drawer }}
+            {{$id}}theme_boost-drawers-blocks{{/id}}
+            {{$drawerclasses}}drawer drawer-right{{#blockdraweropen}} show{{/blockdraweropen}}{{/drawerclasses}}
+            {{$drawercontent}}
+                <div class="d-print-none">
+                    {{{ addblockbutton }}}
+                    {{{ sidepreblocks }}}
+                </div>
+            {{/drawercontent}}
+            {{$drawerpreferencename}}drawer-open-block{{/drawerpreferencename}}
+            {{$forceopen}}{{#forceblockdraweropen}}1{{/forceblockdraweropen}}{{/forceopen}}
+            {{$drawerstate}}show-drawer-right{{/drawerstate}}
+            {{$tooltipplacement}}left{{/tooltipplacement}}
+            {{$drawercloseonresize}}1{{/drawercloseonresize}}
+            {{$closebuttontext}}{{#str}}closeblockdrawer, core{{/str}}{{/closebuttontext}}
+        {{/ theme_boost/drawer}}
+    {{/hasblocks}}
+    <div id="page" data-region="mainpage" data-usertour="scroller" class="drawers layout-fullwidth {{#courseindexopen}}show-drawer-left{{/courseindexopen}} {{#blockdraweropen}}show-drawer-right{{/blockdraweropen}} drag-container">
+        <div id="topofscroll" class="main-inner">
+            <div class="drawer-toggles d-flex">
+                {{#courseindex}}
+                    <div class="drawer-toggler drawer-left-toggle open-nav d-print-none">
+                        <button
+                            class="btn icon-no-margin"
+                            data-toggler="drawers"
+                            data-action="toggle"
+                            data-target="theme_boost-drawers-courseindex"
+                            data-toggle="tooltip"
+                            data-placement="right"
+                            title="{{#str}}opendrawerindex, core{{/str}}"
+                        >
+                            <span class="sr-only">{{#str}}opendrawerindex, core{{/str}}</span>
+                            {{#pix}} t/index_drawer, moodle {{/pix}}
+                        </button>
+                    </div>
+                {{/courseindex}}
+                {{#hasblocks}}
+                    <div class="drawer-toggler drawer-right-toggle ms-auto d-print-none">
+                        <button
+                            class="btn icon-no-margin"
+                            data-toggler="drawers"
+                            data-action="toggle"
+                            data-target="theme_boost-drawers-blocks"
+                            data-toggle="tooltip"
+                            data-placement="right"
+                            title="{{#str}}opendrawerblocks, core{{/str}}"
+                        >
+                            <span class="sr-only">{{#str}}opendrawerblocks, core{{/str}}</span>
+                            <span class="dir-rtl-hide">{{#pix}}t/blocks_drawer, core{{/pix}}</span>
+                            <span class="dir-ltr-hide">{{#pix}}t/blocks_drawer_rtl, core{{/pix}}</span>
+                        </button>
+                    </div>
+                {{/hasblocks}}
+            </div>
+            {{{ output.full_header }}}
+            {{#secondarymoremenu}}
+                <div class="secondary-navigation d-print-none">
+                    {{> core/moremenu}}
+                </div>
+            {{/secondarymoremenu}}
+            <div id="page-content" class="pb-3 d-print-block">
+                {{! Aurora content grid: [main | side-post]. The grid is enabled
+                   in post.scss scoped to body.layout-fullwidth. When side-post
+                   has no blocks the aside is not rendered and the center column
+                   spans full width automatically (single-track grid fallback). }}
+                <div class="aurora-content-grid{{#hassidepost}} has-side-post{{/hassidepost}}">
+                    <div id="region-main-box">
+                        {{#hasregionmainsettingsmenu}}
+                        <div id="region-main-settings-menu" class="d-print-none">
+                            <div> {{{ regionmainsettingsmenu }}} </div>
+                        </div>
+                        {{/hasregionmainsettingsmenu}}
+                        <div id="region-main">
+
+                            {{#hasregionmainsettingsmenu}}
+                                <div class="region_main_settings_menu_proxy"></div>
+                            {{/hasregionmainsettingsmenu}}
+                            {{{ output.course_content_header }}}
+                            {{#headercontent}}
+                                {{> core/activity_header }}
+                            {{/headercontent}}
+                            {{#overflow}}
+                                <div class="container-fluid tertiary-navigation">
+                                    <div class="navitem">
+                                        {{> core/url_select}}
+                                    </div>
+                                </div>
+                            {{/overflow}}
+                            {{{ output.main_content }}}
+                            {{{ output.activity_navigation }}}
+                            {{{ output.course_content_footer }}}
+
+                        </div>
+                    </div>
+                    {{#hassidepost}}
+                        <aside class="aurora-side-post block-region" data-region="side-post" aria-label="{{#str}}region-side-post, theme_aurora {{/str}}">
+                            {{{ addblockbutton }}}
+                            {{{ sidepostblocks }}}
+                        </aside>
+                    {{/hassidepost}}
+                </div>
+            </div>
+        </div>
+        {{> theme_boost/footer }}
+    </div>
+    {{{ output.standard_after_main_region_html }}}
+</div>
+
+</body>
+</html>
+{{#js}}
+M.util.js_pending('theme_boost/loader');
+require(['theme_boost/loader', 'theme_boost/drawer'], function(Loader, Drawer) {
+    Drawer.init();
+    M.util.js_complete('theme_boost/loader');
+});
+{{/js}}
