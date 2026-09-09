@@ -2754,3 +2754,174 @@ body.aurora-shell {
         }
     }
 }
+
+
+// =====================================================================
+// block_xp — Level Up XP widget reskinned to the Aurora whiteboard
+// (kept as a real rendered block; only presentation, no behavior change)
+// =====================================================================
+body.aurora-shell .block_xp {
+    background: #fff;
+    border: 1px solid var(--aurora-border);
+    border-radius: 2px;
+    padding: 18px;
+    margin-bottom: 18px;
+    box-shadow: 2px 4px 10px rgba(15, 23, 42, .06);
+
+    .content { padding: 0; }
+
+    // Level name -> Nanum handwritten (block_xp uses tailwind utilities).
+    .xp-text-xl.xp-text-center.xp-font-bold {
+        font-family: 'Nanum Brush Script', cursive;
+        font-size: 30px;
+        font-weight: 400;
+        line-height: 1.1;
+        color: var(--aurora-ink);
+    }
+
+    .xp-mt-6 { margin-top: 16px; }
+
+    // XP total chip (tailwind gray -> sticky yellow pill).
+    .xp-bg-gray-200.xp-rounded-full.xp-px-3 {
+        background: var(--aurora-sticky-yellow);
+        border: 1px solid rgba(15, 23, 42, .1);
+        color: var(--aurora-ink);
+    }
+
+    // Progress bar: track (gray -> board), fill (green-400 -> marker green).
+    .xp-bg-gray-200.xp-h-3 { background: #ecede9; }
+    .xp-bg-green-400 { background: var(--aurora-success); }
+
+    // Next-level badge -> sticky.
+    .xp-self-end > div {
+        background: var(--aurora-sticky-yellow);
+        border: 1px solid rgba(15, 23, 42, .1);
+        color: var(--aurora-ink);
+    }
+
+    // Ranking heading -> Nanum.
+    .block_xp-heading {
+        font-family: 'Nanum Brush Script', cursive;
+        font-size: 26px;
+        font-weight: 400;
+        color: var(--aurora-ink);
+    }
+
+    // Ranking avatars -> ink-bordered circles.
+    .block_xp img.xp-rounded-full {
+        border: 2px solid var(--aurora-ink);
+        box-shadow: 1px 2px 0 rgba(15, 23, 42, .1);
+    }
+
+    // Muted tailwind grays -> token muted.
+    .xp-text-gray-600, .xp-text-gray-500, .xp-text-gray-400,
+    .xp-text-2xs, .xp-text-xs { color: var(--aurora-muted); }
+
+    // Buttons that surface inside the widget -> marker green pill.
+    .btn-primary {
+        background: var(--aurora-success);
+        border: none;
+        border-radius: var(--aurora-radius-btn);
+        font-weight: 700;
+        box-shadow: 1px 2px 0 rgba(15, 23, 42, .14);
+        &:hover { background: var(--aurora-tertiary); color: #fff; }
+    }
+}
+
+// =====================================================================
+// block_learningpath (Rutas de aprendizaje) — whiteboard path cards
+// =====================================================================
+body.aurora-shell .block_learningpath {
+    background: #fff;
+    border: 1px solid var(--aurora-border);
+    border-radius: 2px;
+    padding: 18px;
+    margin-bottom: 18px;
+    box-shadow: 2px 4px 10px rgba(15, 23, 42, .06);
+
+    .content { padding: 0; }
+    .lp-block { margin: 0; }
+
+    // Each path -> green sticky.
+    .lp-card.card {
+        background: var(--aurora-sticky-green);
+        border: none;
+        border-radius: 2px;
+        box-shadow: 1px 3px 8px rgba(15, 23, 42, .1);
+        margin-bottom: 12px;
+        .card-body { padding: 16px; }
+    }
+
+    .lp-path-name.h6 {
+        font-family: 'Jost', system-ui, sans-serif;
+        font-size: 15px;
+        font-weight: 700;
+        color: var(--aurora-ink);
+    }
+
+    .lp-badge {
+        background: var(--aurora-sticky-yellow);
+        border: none;
+        color: var(--aurora-ink);
+        font-weight: 700;
+    }
+
+    .lp-progress {
+        height: 8px;
+        background: rgba(15, 23, 42, .12);
+        border-radius: 999px;
+        overflow: hidden;
+        .progress-bar { background: var(--aurora-success) !important; border: none; }
+    }
+    .lp-progress-text.small.text-muted { color: var(--aurora-muted); font-size: 12px; }
+
+    // Stepper dots -> ink circles; completed -> marker green.
+    .lp-stepper { gap: 8px; }
+    .lp-dot {
+        width: 26px; height: 26px;
+        border: 2px solid var(--aurora-ink);
+        background: #fff;
+        color: var(--aurora-ink);
+        border-radius: 999px;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 12px;
+    }
+    .lp-dot.bg-success { background: var(--aurora-success); border-color: var(--aurora-success); color: #fff; }
+    .lp-dot.bg-primary { background: #fff; border-color: var(--aurora-ink); color: var(--aurora-ink); }
+    .lp-dot-core { width: 10px; height: 10px; background: var(--aurora-ink); border-radius: 999px; }
+
+    .lp-btn-continue.btn-primary {
+        background: var(--aurora-success);
+        border: none;
+        border-radius: var(--aurora-radius-btn);
+        font-weight: 700;
+        box-shadow: 1px 2px 0 rgba(15, 23, 42, .14);
+    }
+    .lp-viewlink { color: var(--aurora-success); font-weight: 600; }
+    .lp-viewall { color: var(--aurora-muted); font-weight: 600; }
+    .lp-empty-icon { color: var(--aurora-muted); }
+}
+
+// =====================================================================
+// block_iomad_learningpath (legacy) — whiteboard path cards
+// =====================================================================
+body.aurora-shell #iomad_learningpaths,
+body.aurora-shell .block_iomad_learningpath {
+    background: #fff;
+    border: 1px solid var(--aurora-border);
+    border-radius: 2px;
+    padding: 18px;
+    margin-bottom: 18px;
+    box-shadow: 2px 4px 10px rgba(15, 23, 42, .06);
+
+    .content { padding: 0; }
+    .pathdescription.card, .lpcard.card {
+        background: var(--aurora-sticky-green);
+        border: none;
+        border-radius: 2px;
+        box-shadow: 1px 3px 8px rgba(15, 23, 42, .1);
+    }
+    .learningpathtitle, .coursetitle { color: var(--aurora-ink); }
+    .progress { background: rgba(15, 23, 42, .12); border-radius: 999px; height: 8px; }
+    .progress .progress-bar { background: var(--aurora-success) !important; border: none; }
+}
