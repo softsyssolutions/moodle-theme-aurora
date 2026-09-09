@@ -35,16 +35,31 @@ body.aurora-shell {
             }
         }
 
-        // Active page item — board green background, no side-tab
-        .courseindex-item.pageitem .courseindex-link,
-        .courseindex-item.pageitem > a,
+        // Current (non-page) item — board green tint, no side-tab.
         .courseindex-item.current .courseindex-link,
-        [data-for="cm"].pageitem .courseindex-link,
-        .courseindex .pageitem > a {
+        [data-for="cm"].current .courseindex-link {
             background: rgba(24, 136, 56, 0.12) !important;
             color: #188838 !important;
             font-weight: 600;
             border-radius: 3px;
+        }
+
+        // Active page item — core paints the whole li solid board green, so ALL
+        // foreground inside it (link, icons, section title) must be white.
+        .courseindex-item.pageitem,
+        .courseindex .pageitem {
+            background-color: #188838;
+
+            .courseindex-link,
+            > a,
+            .courseindex-section-title,
+            .completioninfo .icon,
+            .icon {
+                background: transparent !important;
+                color: #fff !important;
+                font-weight: 600;
+                border-radius: 3px;
+            }
         }
 
         .courseindex-section-title {
