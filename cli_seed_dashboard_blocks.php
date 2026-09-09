@@ -3,13 +3,12 @@
 // default dashboard page (my_pages id=2, pagetypepattern 'my-index',
 // subpagepattern '2', parentcontextid 1 = system context).
 //
-//   content  (middle): iomad_learningpath, lp (Learning plans), myoverview
-//   side-pre (rail)  : learningpath, timeline, calendar_month,
-//                      recentlyaccessedcourses, badges, completion_progress,
-//                      recentlyaccesseditems
+//   side-pre  (left)  : timeline, calendar_month, recentlyaccessedcourses
+//   content   (middle): myoverview  (sole block — owns the full 1fr wide column)
+//   side-post (right) : badges, completion_progress, recentlyaccesseditems
 //
-// Removes the remaining IOMAD chrome blocks — the learner experience must contain
-// ZERO company-admin chrome. Re-runs safely (upserts by blockname+region).
+// Removes the IOMAD chrome block (iomad_learningpath) — the learner experience
+// must contain ZERO IOMAD chrome. Re-runs safely (upserts by blockname+region).
 //
 // Run: docker exec iomad-sandbox-webserver-1 php /var/www/html/theme/aurora/cli_seed_dashboard_blocks.php
 
@@ -25,31 +24,24 @@ $subpagepattern  = '2';        // my_pages id of the default private dashboard.
 $parentcontextid = \context_system::instance()->id;  // = 1.
 
 // Desired layout: blockname => [region, weight].
-// EVERYTHING rail-bound goes in side-pre: 9 of the 10 tenant themes declare only
-// side-pre on the dashboard, and Moodle appends blocks from undeclared regions
-// (side-post) to the END of the default region — which buried the learningpath
-// block below the timeline. One region, explicit order, same result everywhere.
+// Middle column = myoverview ONLY (full 1fr width). recentlyaccessedcourses
+// moves to side-pre (left rail, below calendar) — it was cramped competing
+// for width in the middle column and is thematically a quick-access card.
 $layout = [
+    // Left rail.
+    'timeline'                => ['side-pre',  0],
+    'calendar_month'          => ['side-pre',  1],
+    'recentlyaccessedcourses' => ['side-pre',  2],
     // Middle column (content region, rendered inside main_content by my/index.php).
-    // iomad_learningpath leads: it is the widest, richest card (expandable groups
-    // and per-course progress) and needs the room. Its path.js binds global
-    // selectors, so never create a second instance on this page.
-    'iomad_learningpath'      => ['content',  0],
-    'lp'                      => ['content',  1],
-    'myoverview'              => ['content',  2],
-    // Rail. learningpath (SSS learning paths block) sits at the top so the
-    // learner sees their paths and current position first thing.
-    'learningpath'            => ['side-pre', 0],
-    'timeline'                => ['side-pre', 1],
-    'calendar_month'          => ['side-pre', 2],
-    'recentlyaccessedcourses' => ['side-pre', 3],
-    'badges'                  => ['side-pre', 4],
-    'completion_progress'     => ['side-pre', 5],
-    'recentlyaccesseditems'   => ['side-pre', 6],
+    'myoverview'              => ['content',   0],
+    // Right rail.
+    'badges'                  => ['side-post', 0],
+    'completion_progress'     => ['side-post', 1],
+    'recentlyaccesseditems'   => ['side-post', 2],
 ];
 
 // Blocks that must NOT appear in the learner dashboard (IOMAD chrome / dupes).
-$remove = ['iomad_company_admin', 'mycourses'];
+$remove = ['iomad_learningpath', 'iomad_company_admin', 'mycourses'];
 
 $baserec = [
     'parentcontextid'     => $parentcontextid,
@@ -118,16 +110,6 @@ foreach ($layout as $blockname => [$region, $weight]) {
 // 3) Propagate the new default layout to every user's private dashboard.
 my_reset_page_for_all_users(MY_PAGE_PRIVATE, 'my-index');
 echo "  propagated to all users (my_reset_page_for_all_users)\n";
-
-// 3b) Boost-family themes collapse the block drawer for fresh accounts and the
-// space themes have their own sidebar toggle. Open both for every active user
-// so the rail is visible without a click.
-$users = $DB->get_records_select('user', 'deleted = 0 AND suspended = 0 AND id > 1', [], 'id', 'id');
-foreach ($users as $u) {
-    set_user_preference('drawer-open-block', 'true', $u->id);
-    set_user_preference('drawer-open-nav', 'true', $u->id);
-}
-echo '  drawer prefs opened for ' . count($users) . " users\n";
 
 // 4) Show the resulting layout.
 echo "\n== Resulting layout ==\n";

@@ -1,0 +1,36 @@
+// =====================================================================
+// Aurora Base Styles
+// Typography, canvas, and global resets
+// =====================================================================
+
+body.aurora-shell,
+body.aurora-login {
+    font-family: 'Jost', system-ui, -apple-system, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    background-color: var(--aurora-bg);
+    // Sutil pattern de puntos para profundidad (ink-based, sin morado)
+    background-image: radial-gradient(circle at 1px 1px, rgba(15, 23, 42, 0.03) 1px, transparent 0);
+    background-size: 24px 24px;
+}
+
+body.aurora-shell {
+    // Typography scale
+    h1, h2, h3, h4 {
+        letter-spacing: -0.02em;
+        font-weight: 800;
+    }
+
+    // Better heading hierarchy
+    h1 { font-size: clamp(28px, 2.5vw, 36px); }
+    h2 { font-size: clamp(24px, 2vw, 30px); }
+    h3 { font-size: clamp(20px, 1.5vw, 24px); }
+    h4 { font-size: clamp(18px, 1.2vw, 20px); }
+}
+
+// Login canvas is owned by post-legacy / post.scss (split-board grid).
+
+// Focus visible for accessibility
+:focus-visible {
+    outline: 2px solid var(--aurora-primary);
+    outline-offset: 2px;
+}

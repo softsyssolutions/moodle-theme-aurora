@@ -1,0 +1,55 @@
+{{!
+    @template theme_aurora/hero_extendido
+    Aurora full-width hero component for the public frontpage.
+
+    Rendered by core_renderer::full_header() on the 'frontpage' layout only
+    (the /my/ dashboard keeps the compact dashboard_hero). All values are REAL
+    learner data supplied by aurora_frontpage_hero_context():
+      greeting, firstname, inprogress, completed, awards,
+      hascontinue (in-progress course with highest completion), continueurl.
+
+    Example context (json):
+    {
+        "greeting": "¡Hola de nuevo",
+        "firstname": "Sofía",
+        "hasfirstname": true,
+        "campusactive": "Campus activo",
+        "welcometocampus": "¡bienvenida a tu campus!",
+        "herosubtitle": "Continuá donde lo dejaste.",
+        "mycoursesurl": "http://aprende.lvh.me/my/courses.php",
+        "mycourseslabel": "Mis cursos",
+        "hascontinue": true,
+        "continueurl": "http://aprende.lvh.me/course/view.php?id=3",
+        "continuelabel": "Continuar"
+    }
+}}
+<div class="aurora-hero-fullwidth" data-region="aurora-hero-fullwidth">
+    <div class="aurora-hero-bg" aria-hidden="true"></div>
+    <div class="aurora-hero-orbs" aria-hidden="true">
+        <div class="aurora-hero-orb aurora-hero-orb--1"></div>
+        <div class="aurora-hero-orb aurora-hero-orb--2"></div>
+        <div class="aurora-hero-orb aurora-hero-orb--3"></div>
+    </div>
+    <div class="aurora-hero-content">
+        <div class="aurora-hero-badge">
+            <span class="aurora-hero-badge-dot" aria-hidden="true"></span>
+            <span>{{#str}}campusactive, theme_aurora{{/str}}</span>
+        </div>
+        <h1 class="aurora-hero-title">
+            {{greeting}}{{#hasfirstname}}, {{firstname}}{{/hasfirstname}} — {{#str}}welcometocampus, theme_aurora{{/str}}
+        </h1>
+        <p class="aurora-hero-subtitle">
+            {{#str}}herosubtitle, theme_aurora{{/str}}
+        </p>
+        <div class="aurora-hero-actions">
+            <a href="{{{mycoursesurl}}}" class="aurora-hero-btn aurora-hero-btn--solid">
+                {{#str}}navmycourses, theme_aurora{{/str}}
+            </a>
+            {{#hascontinue}}
+            <a href="{{{continueurl}}}" class="aurora-hero-btn aurora-hero-btn--ghost">
+                {{#str}}herocontinue, theme_aurora{{/str}}
+            </a>
+            {{/hascontinue}}
+        </div>
+    </div>
+</div>

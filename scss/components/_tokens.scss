@@ -1,0 +1,61 @@
+// =====================================================================
+// Aurora Design Tokens
+// Centralized CSS custom properties for consistent theming
+// =====================================================================
+
+:root {
+    // Brand colors
+    --aurora-primary: #188838;
+    --aurora-accent: #f8db53;
+    --aurora-secondary: #a2d984;
+    --aurora-tertiary: #0f5c24;
+
+    // Neutral colors
+    --aurora-bg: #f4f5f5;
+    --aurora-card: #ffffff;
+    --aurora-border: #e8e4f0;
+    --aurora-border-dark: #d8d4e8;
+    --aurora-text: #0a0a0c;
+    --aurora-muted: #8b8598;
+    --aurora-muted-2: #6b6577;
+
+    // Semantic colors
+    --aurora-success: #188838;
+    --aurora-warning: #f59e0b;
+    --aurora-danger: #ef4444;
+
+    // Border radius
+    --aurora-radius-card: 16px;
+    --aurora-radius-hero: 20px;
+    --aurora-radius-btn: 12px;
+    --aurora-radius-pill: 100px;
+    --aurora-radius-sm: 8px;
+
+    // Spacing
+    --aurora-spacing-xs: 8px;
+    --aurora-spacing-sm: 12px;
+    --aurora-spacing-md: 16px;
+    --aurora-spacing-lg: 24px;
+    --aurora-spacing-xl: 32px;
+    --aurora-spacing-2xl: 48px;
+
+    // Shadows - ink-based (no purple glow)
+    --aurora-shadow-sm: 0 2px 8px rgba(15, 23, 42, 0.06);
+    --aurora-shadow-md: 0 8px 24px rgba(15, 23, 42, 0.10);
+    --aurora-shadow-lg: 0 16px 48px rgba(15, 23, 42, 0.12);
+    --aurora-shadow-xl: 0 24px 64px rgba(15, 23, 42, 0.16);
+
+    // Gradients - whiteboard identity (no SaaS purple)
+    --aurora-gradient-primary: linear-gradient(120deg, #188838 0%, #0f5c24 60%, #a2d984 100%);
+    --aurora-gradient-hero: linear-gradient(135deg, rgba(24, 136, 56, 0.95) 0%, rgba(15, 92, 36, 0.92) 50%, rgba(162, 217, 132, 0.88) 100%);
+    --aurora-gradient-card: linear-gradient(135deg, #fff 0%, #f8fafc 100%);
+    --aurora-gradient-purple: linear-gradient(90deg, #188838, #a2d984);
+    --aurora-gradient-progress: linear-gradient(90deg, var(--aurora-primary) 0%, var(--aurora-tertiary) 50%, var(--aurora-secondary) 100%);
+}
+
+// Dark mode is intentionally NOT activated here. post-legacy.scss is the
+// canonical token source and ships a single light palette; a premature
+// prefers-color-scheme override here would flip the canvas dark on systems in
+// dark mode while the rest of the skin (hero, cards, blocks) is still light —
+// producing a broken half-dark layout. Activate dark mode only when the full
+// token set (every component in post-legacy.scss) is ported to dual palettes.

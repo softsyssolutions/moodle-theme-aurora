@@ -1,0 +1,48 @@
+{{!
+    @template theme_aurora/courses_bento
+    Aurora bento grid courses component
+
+    Example context (json):
+    {
+        "courses": [
+            {
+                "id": 1,
+                "fullname": "Curso Ejemplo",
+                "category": "Desarrollo",
+                "progress": 75,
+                "imageurl": "https://...",
+                "viewurl": "https://...",
+                "hasprogress": true
+            }
+        ]
+    }
+}}
+<div class="aurora-courses-bento">
+    <h3 class="aurora-section-title">{{#str}}mycourses, core{{/str}}</h3>
+    <div class="aurora-bento-grid">
+        {{#courses}}
+        <div class="aurora-bento-item {{#featured}}aurora-bento-item--featured{{/featured}}">
+            <a href="{{viewurl}}" class="aurora-bento-card">
+                <div class="aurora-bento-image"{{#imageurl}} style="background-image: url('{{{imageurl}}}');"{{/imageurl}}>
+                    <div class="aurora-bento-overlay"></div>
+                    {{#featured}}
+                    <div class="aurora-bento-badge">{{#str}}featured, theme_aurora{{/str}}</div>
+                    {{/featured}}
+                </div>
+                <div class="aurora-bento-body">
+                    <div class="aurora-bento-category">{{category}}</div>
+                    <h4 class="aurora-bento-title">{{fullname}}</h4>
+                    {{#hasprogress}}
+                    <div class="aurora-bento-progress">
+                        <div class="aurora-bento-progress-text">{{progress}}%</div>
+                        <div class="aurora-bento-progress-bar">
+                            <div class="aurora-bento-progress-fill" style="width: {{progress}}%;"></div>
+                        </div>
+                    </div>
+                    {{/hasprogress}}
+                </div>
+            </a>
+        </div>
+        {{/courses}}
+    </div>
+</div>

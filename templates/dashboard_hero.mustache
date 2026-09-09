@@ -44,7 +44,10 @@
         {{/hascontinue}}
 
         <div class="aurora-board__lane">
-            <h3 class="aurora-board__lane-title">{{inprogresslabel}}</h3>
+            <h3 class="aurora-board__lane-title">
+                <span class="aurora-board__lane-label">{{inprogresslabel}}</span>
+                <span class="aurora-board__lane-count" aria-label="{{inprogresscount}}">{{inprogresscount}}</span>
+            </h3>
             <ul class="aurora-board__lane-list">
                 {{#inprogress}}
                 <li>
@@ -65,7 +68,10 @@
         </div>
 
         <div class="aurora-board__lane">
-            <h3 class="aurora-board__lane-title">{{completedlabel}}</h3>
+            <h3 class="aurora-board__lane-title">
+                <span class="aurora-board__lane-label">{{completedlabel}}</span>
+                <span class="aurora-board__lane-count" aria-label="{{completedcount}}">{{completedcount}}</span>
+            </h3>
             <ul class="aurora-board__lane-list">
                 {{#completed}}
                 <li>
@@ -88,7 +94,10 @@
         </div>
 
         <div class="aurora-board__lane">
-            <h3 class="aurora-board__lane-title">{{awardslabel}}</h3>
+            <h3 class="aurora-board__lane-title">
+                <span class="aurora-board__lane-label">{{awardslabel}}</span>
+                <span class="aurora-board__lane-count" aria-label="{{awardscount}}">{{awardscount}}</span>
+            </h3>
             <ul class="aurora-board__lane-list">
                 {{#awards}}
                 <li>

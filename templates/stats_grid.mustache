@@ -1,0 +1,23 @@
+{{!
+    @template theme_aurora/stats_grid
+    Aurora full-width stats grid component
+
+    Example context (json):
+    {
+        "stats": [
+            {"value": "3", "label": "En Progreso", "variant": "primary"},
+            {"value": "12", "label": "Completados", "variant": "success"},
+            {"value": "5", "label": "Logros", "variant": "warning"},
+            {"value": "48h", "label": "Aprendizaje", "variant": "accent"}
+        ]
+    }
+}}
+<div class="aurora-stats-fullwidth">
+    {{#stats}}
+    <div class="aurora-stat-card aurora-stat-card--{{variant}}">
+        <div class="aurora-stat-bg"></div>
+        <div class="aurora-stat-value">{{value}}</div>
+        <div class="aurora-stat-label">{{label}}</div>
+    </div>
+    {{/stats}}
+</div>

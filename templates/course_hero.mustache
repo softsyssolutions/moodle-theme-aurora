@@ -52,21 +52,16 @@
                     <p class="aurora-course-hero__summary">{{summary}}</p>
                 {{/hassummary}}
                 <div class="aurora-course-hero__meta">
-                    {{#haslessons}}<span>&#128218; {{lessonslabel}}</span>{{/haslessons}}
-                    {{#hasenrolled}}<span>&#128101; {{enrolledlabel}}</span>{{/hasenrolled}}
+                    {{#haslessons}}<span>{{lessonslabel}}</span>{{/haslessons}}
+                    {{#hasenrolled}}<span>{{enrolledlabel}}</span>{{/hasenrolled}}
                 </div>
             </div>
 
             {{#hascompletion}}
                 <div class="aurora-course-hero__progress">
-                    <div class="aurora-course-hero__ring">
-                        <svg width="78" height="78" viewBox="0 0 78 78">
-                            <circle class="aurora-course-hero__ring-track" cx="39" cy="39" r="33" fill="none" stroke-width="9"/>
-                            <circle class="aurora-course-hero__ring-fill" cx="39" cy="39" r="33" fill="none" stroke-width="9"
-                                stroke-linecap="round"
-                                stroke-dasharray="{{ringcircumference}}" stroke-dashoffset="{{ringoffset}}"/>
-                        </svg>
-                        <span class="aurora-course-hero__ring-label">{{completionpct}}%</span>
+                    <div class="aurora-course-hero__pct">{{completionpct}}%</div>
+                    <div class="aurora-course-hero__bar" aria-hidden="true">
+                        <span style="width: {{completionpct}}%;"></span>
                     </div>
                     <div class="aurora-course-hero__completed">{{completedlabel}}</div>
                     <a href="{{continueurl}}" class="aurora-course-hero__btn">{{continuelabel}} &rarr;</a>
