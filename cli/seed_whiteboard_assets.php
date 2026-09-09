@@ -78,6 +78,7 @@ $coursemap = [
     'aprende-c3' => 'course-aprende-c3',
     'aprende-c4' => 'course-aprende-c4',
     'aprende-c5' => 'course-aprende-c5',
+    'curso-ley-de-proteccion-de-datos-personales-msdb4896' => 'course-aprende-c6',
     'LP-APRENDE-ONB1' => 'course-LP-APRENDE-ONB1',
     'LP-APRENDE-ONB2' => 'course-LP-APRENDE-ONB2',
 ];
