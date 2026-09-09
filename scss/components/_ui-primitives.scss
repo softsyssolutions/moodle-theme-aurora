@@ -1,0 +1,333 @@
+// =====================================================================
+// Aurora UI Primitives — Whiteboard identity, learner surfaces only.
+//
+// Scope: body.aurora-shell — never leaks to admin, login, or TinyMCE.
+// Purpose: erase every computed rgb(109,93,246) / legacy purple from
+// learner pages and replace with Aurora Whiteboard tokens:
+//   board green  #188838  (--aurora-primary / --aurora-success)
+//   sticky yellow #f8db53  (--aurora-accent)
+//   sticky green  #a2d984  (--aurora-secondary)
+//   ink           #0f172a  (--aurora-ink)
+// Radii 2–6px, shadows ink-based (no purple glow). Boost JS intact.
+// =====================================================================
+
+body.aurora-shell {
+
+    // ---- Text selection + caret ----
+    ::selection {
+        background: rgba(162, 217, 132, 0.32);
+        color: #0f172a;
+    }
+    ::-moz-selection {
+        background: rgba(162, 217, 132, 0.32);
+        color: #0f172a;
+    }
+    input,
+    textarea { caret-color: #188838; }
+
+    // ---- Focus ring (green, not purple) ----
+    :focus-visible {
+        outline: 2px solid #188838 !important;
+        outline-offset: 2px;
+    }
+
+    // ---- Links (exclude nav links, buttons, CTAs) ----
+    a:not(.btn):not(.nav-link):not(.dropdown-item):not(.aurora-front__cta):not(.aurora-front__secondary):not([class*="aurora-board"]):not([class*="aurora-sticky"]) {
+        color: #188838;
+        &:hover { color: #0f5c24; }
+    }
+
+    // ---- Bootstrap utility overrides ----
+    .text-primary    { color: #188838 !important; }
+    .border-primary  { border-color: #188838 !important; }
+    .bg-primary      { background-color: #188838 !important; color: #fff !important; }
+
+    // ---- Badges (Bootstrap badges, not module completion) ----
+    .badge.badge-primary,
+    .badge-primary,
+    span.badge[class*="primary"] {
+        background-color: #188838 !important;
+        color: #fff !important;
+        border-radius: 3px;
+        box-shadow: none;
+    }
+
+    // Generic border-radius tightening for all badges
+    .badge { border-radius: 3px; }
+
+    // ---- Buttons primary / outline-primary ----
+    //
+    // These win over the partial _buttons.scss because they are included later.
+    .btn-primary {
+        background: #188838 !important;
+        border-color: #188838 !important;
+        border-radius: 4px;
+        box-shadow: 2px 4px 10px rgba(15, 23, 42, 0.12);
+        transition: transform 0.15s ease, box-shadow 0.15s ease;
+
+        &::before { display: none; }
+
+        &:hover,
+        &:focus {
+            background: #0f5c24 !important;
+            border-color: #0f5c24 !important;
+            box-shadow: 2px 6px 14px rgba(15, 23, 42, 0.16);
+            transform: translateY(-1px);
+            color: #fff;
+        }
+        &:active,
+        &.active,
+        &:not(:disabled):not(.disabled):active {
+            background: #0f5c24 !important;
+            border-color: #0f5c24 !important;
+            transform: translateY(0);
+        }
+
+        // Ensure text is readable
+        &, &:hover, &:focus, &:active { color: #fff !important; }
+    }
+
+    // Solid board-green surfaces always use white foreground.
+    .btn-success,
+    .badge-success,
+    .bg-success,
+    a.aurora-course-hero__btn {
+        color: #fff !important;
+
+        .icon,
+        svg {
+            color: inherit !important;
+        }
+    }
+
+    .btn-success:hover,
+    .btn-success:focus,
+    a.aurora-course-hero__btn:hover,
+    a.aurora-course-hero__btn:focus {
+        color: #fff !important;
+        background-color: #0f5c24 !important;
+        border-color: #0f5c24 !important;
+    }
+
+    .btn-outline-primary {
+        border-color: #188838 !important;
+        color: #188838 !important;
+        background: transparent !important;
+        border-radius: 4px;
+        box-shadow: none;
+
+        &:hover,
+        &:focus {
+            background: #188838 !important;
+            border-color: #188838 !important;
+            color: #fff !important;
+            box-shadow: 2px 4px 10px rgba(15, 23, 42, 0.12);
+        }
+    }
+
+    // ---- Form controls: focus + checked ----
+    .form-control:focus,
+    .form-select:focus,
+    select:focus,
+    textarea:focus,
+    input[type="text"]:focus,
+    input[type="email"]:focus,
+    input[type="password"]:focus,
+    input[type="number"]:focus,
+    input[type="url"]:focus,
+    input[type="search"]:focus,
+    input[type="date"]:focus {
+        border-color: #188838 !important;
+        box-shadow: 0 0 0 2px rgba(24, 136, 56, 0.18) !important;
+        outline: none;
+    }
+
+    .form-check-input:checked {
+        background-color: #188838 !important;
+        border-color: #188838 !important;
+    }
+    .form-check-input:focus {
+        border-color: #188838 !important;
+        box-shadow: 0 0 0 2px rgba(24, 136, 56, 0.18) !important;
+    }
+
+    // Bootstrap 4 custom controls (Moodle 4.x uses both 4 and 5 components)
+    .custom-control-input:checked ~ .custom-control-label::before {
+        border-color: #188838 !important;
+        background-color: #188838 !important;
+    }
+    .custom-control-input:focus ~ .custom-control-label::before {
+        box-shadow: 0 0 0 2px rgba(24, 136, 56, 0.2) !important;
+    }
+    .custom-control-input:focus:not(:checked) ~ .custom-control-label::before {
+        border-color: #188838 !important;
+    }
+
+    // Range / color inputs
+    input[type="range"]  { accent-color: #188838; }
+    input[type="color"]  { accent-color: #188838; }
+
+    // ---- Dropdowns ----
+    .dropdown-menu {
+        border-radius: 4px;
+        border: 1px solid #c5c5c7;
+        box-shadow: 2px 8px 20px rgba(15, 23, 42, 0.1);
+    }
+    .dropdown-item {
+        border-radius: 3px;
+        &:hover,
+        &:focus {
+            background: rgba(162, 217, 132, 0.18);
+            color: #0f172a;
+        }
+        &.active,
+        &:active {
+            background: #188838 !important;
+            color: #fff !important;
+        }
+    }
+
+    // ---- Modal ----
+    .modal-content {
+        border-radius: 4px;
+        border: 1px solid #c5c5c7;
+        box-shadow: 2px 12px 32px rgba(15, 23, 42, 0.14);
+    }
+    .modal-header { border-bottom-color: #c5c5c7; }
+    .modal-footer {
+        border-top-color: #c5c5c7;
+
+        a, .btn-link { color: #188838; &:hover { color: #0f5c24; } }
+    }
+
+    // ---- Alerts ----
+    .alert-primary {
+        background: rgba(24, 136, 56, 0.1) !important;
+        border-color: rgba(24, 136, 56, 0.3) !important;
+        color: #0f5c24 !important;
+    }
+    .alert-info {
+        background: rgba(162, 217, 132, 0.12) !important;
+        border-color: rgba(162, 217, 132, 0.4) !important;
+        color: #0f5c24 !important;
+    }
+
+    // ---- Tables (.generaltable / .table) ----
+    .generaltable,
+    .table {
+        thead th {
+            border-bottom: 2px solid #188838;
+            background: #f8fafc;
+            color: #0f172a;
+            font-weight: 700;
+        }
+        .table-active,
+        tr.active { background: rgba(162, 217, 132, 0.15); }
+        tbody tr:hover { background: rgba(162, 217, 132, 0.06); }
+        border-radius: 4px;
+    }
+
+    // ---- Pagination ----
+    .pagination {
+        .page-link {
+            color: #188838;
+            border-radius: 3px;
+            border-color: #c5c5c7;
+
+            &:hover {
+                background: rgba(162, 217, 132, 0.18);
+                border-color: #188838;
+                color: #0f5c24;
+            }
+        }
+        .page-item.active .page-link {
+            background: #188838 !important;
+            border-color: #188838 !important;
+            color: #fff !important;
+        }
+        .page-item.disabled .page-link { color: #4b5563; }
+    }
+
+    // ---- Popovers / notification region footer ----
+    .popover-footer,
+    .popover-region-footer,
+    .popover .popover-footer,
+    [data-region="notification-area"] footer,
+    [data-region="message-region"] footer {
+        a,
+        .btn-link { color: #188838; &:hover { color: #0f5c24; } }
+    }
+
+    // ---- Nav tabs (generic — secondary nav handled in course-incourse) ----
+    .nav-tabs {
+        .nav-link {
+            color: #374151;
+            border-radius: 3px 3px 0 0;
+
+            &:hover { color: #188838; background: transparent; }
+            &.active,
+            &[aria-current="page"] {
+                color: #0f172a !important;
+                border-bottom: 2px solid #188838 !important;
+                background: transparent !important;
+                box-shadow: none !important;
+            }
+        }
+    }
+
+    // ---- Activity icon containers (timeline, recent items, etc.) ----
+    // Replace legacy #f0eefe purple tint with whiteboard yellow
+    .activityiconcontainer,
+    .icon-container {
+        background: rgba(248, 219, 83, 0.28);
+        border-radius: 4px;
+
+        // Specific activity types
+        &.modtype_assign,
+        .modtype_assign & { background: rgba(248, 219, 83, 0.32); }
+        &.modtype_quiz,
+        .modtype_quiz & { background: rgba(162, 217, 132, 0.32); }
+        &.modtype_forum,
+        .modtype_forum & { background: rgba(248, 219, 83, 0.26); }
+        &.modtype_page,
+        &.modtype_resource,
+        .modtype_page &,
+        .modtype_resource & { background: rgba(162, 217, 132, 0.22); }
+    }
+
+    // ---- Block completion_progress: green pills not purple ----
+    .block_completion_progress {
+        .progressBarCell.completed,
+        .progressBarCell[style*="green"],
+        td[style*="background-color: #73A839"],
+        td.completed {
+            background: linear-gradient(90deg, #188838, #a2d984) !important;
+        }
+        .progressBarCell.futureNotCompleted,
+        .progressBarCell:not(.completed) {
+            background: #e5e7eb !important;
+        }
+        .progressPercentageCell,
+        .progress-percentage { color: #188838 !important; font-weight: 700; }
+    }
+
+    // ---- Progress bars: green gradient not purple ----
+    .progress {
+        background: #e5e7eb;
+        border-radius: 4px;
+    }
+    .progress .progress-bar {
+        background: linear-gradient(90deg, #188838 0%, #0f5c24 50%, #a2d984 100%) !important;
+        border-radius: 4px;
+
+        // Keep shimmer animation but remove purple
+        &::after {
+            background: linear-gradient(
+                90deg,
+                transparent 0%,
+                rgba(255, 255, 255, 0.28) 50%,
+                transparent 100%
+            );
+        }
+    }
+}

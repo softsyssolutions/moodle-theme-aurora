@@ -1,0 +1,125 @@
+{{!
+    This file is part of Moodle - http://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+}}
+{{!
+    @template theme_aurora/dashboard_hero
+
+    Stand-up whiteboard for /my/. Real enrolments, completion %, and badges only.
+    Continuar sticky + three lanes (in progress / completed / awards).
+}}
+<section class="aurora-board d-print-none" data-region="aurora-board" aria-label="{{boardlabel}}">
+    <div class="aurora-board__grid">
+        {{#hascontinue}}
+        <article class="aurora-sticky aurora-sticky--continue aurora-sticky--yellow">
+            <div class="aurora-sticky__pins" aria-hidden="true"></div>
+            <p class="aurora-sticky__hand">{{ctalabel}}</p>
+            <h2 class="aurora-sticky__title">{{title}}</h2>
+            <p class="aurora-sticky__pct">{{pct}}%</p>
+            <div class="aurora-sticky__bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="{{pct}}" aria-label="{{pct}}%">
+                <span class="aurora-sticky__bar-fill" style="width: {{pct}}%;"></span>
+            </div>
+            <a href="{{ctaurl}}" class="aurora-sticky__cta">{{ctalabel}} &rarr;</a>
+        </article>
+        {{/hascontinue}}
+        {{^hascontinue}}
+        <article class="aurora-sticky aurora-sticky--continue aurora-sticky--yellow">
+            <p class="aurora-sticky__hand">{{ctalabel}}</p>
+            <h2 class="aurora-sticky__title">{{title}}</h2>
+            <p class="aurora-sticky__note">{{subtitle}}</p>
+            <a href="{{ctaurl}}" class="aurora-sticky__cta">{{ctalabel}} &rarr;</a>
+        </article>
+        {{/hascontinue}}
+
+        <div class="aurora-board__lane">
+            <h3 class="aurora-board__lane-title">{{inprogresslabel}}</h3>
+            <ul class="aurora-board__lane-list">
+                {{#inprogress}}
+                <li>
+                    <a class="aurora-sticky aurora-sticky--sm aurora-sticky--green" href="{{url}}">
+                        <span class="aurora-sticky__sm-title">{{name}}</span>
+                        <span class="aurora-sticky__sm-pct">{{pct}}%</span>
+                        <span class="aurora-sticky__bar aurora-sticky__bar--sm" aria-hidden="true">
+                            <span class="aurora-sticky__bar-fill" style="width: {{pct}}%;"></span>
+                        </span>
+                    </a>
+                </li>
+                {{/inprogress}}
+                {{^inprogress}}
+                <li class="aurora-board__empty">{{emptylane}}</li>
+                {{/inprogress}}
+            </ul>
+            <p class="aurora-board__lane-note">{{inprogressnote}}</p>
+        </div>
+
+        <div class="aurora-board__lane">
+            <h3 class="aurora-board__lane-title">{{completedlabel}}</h3>
+            <ul class="aurora-board__lane-list">
+                {{#completed}}
+                <li>
+                    <a class="aurora-sticky aurora-sticky--sm aurora-sticky--green" href="{{url}}">
+                        <span class="aurora-sticky__sm-title">{{name}}</span>
+                        <span class="aurora-sticky__check" aria-hidden="true">
+                            <svg viewBox="0 0 24 24" width="22" height="22" focusable="false">
+                                <circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-width="2"/>
+                                <path d="M7 12.5l3.2 3.2L17 8.8" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </span>
+                    </a>
+                </li>
+                {{/completed}}
+                {{^completed}}
+                <li class="aurora-board__empty">{{emptylane}}</li>
+                {{/completed}}
+            </ul>
+            <p class="aurora-board__lane-note">{{completednote}}</p>
+        </div>
+
+        <div class="aurora-board__lane">
+            <h3 class="aurora-board__lane-title">{{awardslabel}}</h3>
+            <ul class="aurora-board__lane-list">
+                {{#awards}}
+                <li>
+                    <a class="aurora-sticky aurora-sticky--sm aurora-sticky--yellow" href="{{url}}">
+                        {{#imageurl}}
+                        <img class="aurora-sticky__badge" src="{{imageurl}}" alt="" width="36" height="36">
+                        {{/imageurl}}
+                        <span class="aurora-sticky__sm-title">{{name}}</span>
+                        {{#description}}
+                        <span class="aurora-sticky__sm-desc">{{description}}</span>
+                        {{/description}}
+                    </a>
+                </li>
+                {{/awards}}
+                {{^awards}}
+                <li class="aurora-board__empty">{{emptylane}}</li>
+                {{/awards}}
+            </ul>
+            <p class="aurora-board__lane-note">{{awardsnote}}</p>
+        </div>
+    </div>
+    {{! Shared physical separator — visual world only, no fake course data. }}
+    {{#trayurl}}
+    <div class="aurora-board__tray" aria-hidden="true">
+        <img class="aurora-board__tray-img"
+             src="{{{trayurl}}}"
+             alt=""
+             width="2304"
+             height="240"
+             loading="lazy"
+             decoding="async">
+    </div>
+    {{/trayurl}}
+</section>

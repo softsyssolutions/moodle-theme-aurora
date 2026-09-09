@@ -1,0 +1,213 @@
+{{!
+    This file is part of Moodle - http://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+}}
+{{!
+    @template theme_aurora/frontpage_courses
+
+    Aurora Whiteboard frontpage: rich landing sections rendered below the
+    welcome hero. Contains three distinct regions:
+
+    1. Course catalogue — real courses from core_course_category::top(),
+       3-col desktop grid with 16:10 image cards, typographic fallback.
+    2. Steps section — sequential <ol> "Una ruta clara para avanzar".
+    3. Value section — asymmetric: board-green panel (white text) + two
+       minor sticky notes (yellow / white).
+    4. Sticky CTA bar — guest → login; logged-in → /my/.
+
+    Context: theme_aurora\output\core_course_renderer::aurora_fp_courses_context()
+    No invented data — all course objects come from get_courses() with the same
+    visibility / permission / limit options as core.
+
+    Example context (JSON):
+    {
+        "hascourses": true,
+        "courses": [
+            {
+                "id": 2,
+                "name": "Introducción a Excel",
+                "initial": "I",
+                "url": "/course/view.php?id=2",
+                "hassummary": true,
+                "summary": "Aprende Excel desde cero.",
+
+                "hasimage": true,
+                "imageurl": "/pluginfile.php/...",
+                "rotation": "-2deg"
+            }
+        ],
+        "introtitle": "Cursos disponibles",
+        "introtext": "Explorá lo que tiene este campus.",
+        "emptylabel": "Aún no hay cursos disponibles.",
+        "viewallurl": "/course/index.php",
+        "viewalllabel": "Ver todos los cursos",
+        "stepstitle": "Una ruta clara para avanzar",
+        "steps": [
+            {"num": "01", "title": "Elegir", "desc": "..."},
+            {"num": "02", "title": "Practicar", "desc": "..."},
+            {"num": "03", "title": "Retomar", "desc": "..."}
+        ],
+        "valuetitle": "Aprendizaje que se queda",
+        "valuebody": "...",
+        "note1title": "Tu progreso. Tu ritmo.",
+        "note1body": "...",
+        "note2title": "Un campus que crece con vos",
+        "note2body": "...",
+        "loggedin": false,
+        "guest": true,
+        "ctaloginurl": "/login/index.php",
+        "ctamyurl": "/my/",
+        "ctatitle": "¿Listo para empezar?",
+        "ctabody": "Ingresá para acceder a tus cursos y seguir donde lo dejaste.",
+        "ctaguestlabel": "Entrar a aprender",
+        "ctamylabel": "Ir a mi área de aprendizaje"
+    }
+}}
+
+{{! ================================================================
+    SECTION 1 — COURSE CATALOGUE
+================================================================ }}
+<section class="aurora-fp-catalog d-print-none" aria-labelledby="aurora-fp-catalog-title">
+    <div class="aurora-fp-catalog__header">
+        <h2 class="aurora-fp-catalog__title" id="aurora-fp-catalog-title">{{introtitle}}</h2>
+        <p class="aurora-fp-catalog__intro">{{introtext}}</p>
+    </div>
+
+    {{#hascourses}}
+    <ul class="aurora-fp-catalog__grid" role="list">
+        {{#courses}}
+        <li class="aurora-fp-catalog__item" style="--card-rotate: {{rotation}}">
+            <a class="aurora-fp-card" href="{{{url}}}" aria-label="{{name}}">
+                <div class="aurora-fp-card__img-wrap">
+                    {{#hasimage}}
+                    <img class="aurora-fp-card__img"
+                         src="{{{imageurl}}}"
+                         alt=""
+                         aria-hidden="true"
+                         width="480"
+                         height="300"
+                         loading="lazy"
+                         decoding="async">
+                    {{/hasimage}}
+                    {{^hasimage}}
+                    <span class="aurora-fp-card__initial" aria-hidden="true">{{initial}}</span>
+                    {{/hasimage}}
+                </div>
+                <div class="aurora-fp-card__body">
+
+                    <h3 class="aurora-fp-card__name">{{name}}</h3>
+                    {{#hassummary}}
+                    <p class="aurora-fp-card__summary">{{summary}}</p>
+                    {{/hassummary}}
+                </div>
+            </a>
+        </li>
+        {{/courses}}
+    </ul>
+    <div class="aurora-fp-catalog__footer">
+        <a class="aurora-fp-catalog__viewall" href="{{{viewallurl}}}">
+            {{viewalllabel}} &rarr;
+        </a>
+    </div>
+    {{/hascourses}}
+
+    {{^hascourses}}
+    <p class="aurora-fp-catalog__empty">{{emptylabel}}</p>
+    {{/hascourses}}
+</section>
+
+{{! ================================================================
+    SECTION 2 — STEPS: "Una ruta clara para avanzar"
+================================================================ }}
+<section class="aurora-fp-steps d-print-none" aria-labelledby="aurora-fp-steps-title">
+    <h2 class="aurora-fp-steps__title" id="aurora-fp-steps-title">{{stepstitle}}</h2>
+    <ol class="aurora-fp-steps__list" role="list">
+        {{#steps}}
+        <li class="aurora-fp-steps__item">
+            <span class="aurora-fp-steps__num" aria-hidden="true">{{num}}</span>
+            <div class="aurora-fp-steps__content">
+                <h3 class="aurora-fp-steps__step-title">{{title}}</h3>
+                <p class="aurora-fp-steps__desc">{{desc}}</p>
+            </div>
+        </li>
+        {{/steps}}
+    </ol>
+</section>
+
+{{! ================================================================
+    SECTION 3 — VALUE PROPOSITION (asymmetric panel)
+    Board-green solid panel (white text) + two minor notes
+================================================================ }}
+<section class="aurora-fp-value d-print-none" aria-label="{{valuetitle}}">
+    <div class="aurora-fp-value__main" role="region" aria-label="{{valuetitle}}">
+        {{!
+            Monoline check SVG — whiteboard ink stroke on green panel.
+            viewBox 0 0 48 48 | stroke currentColor (inherits white from parent)
+            fill none | stroke-width/linecap/linejoin set on path.
+            aria-hidden + focusable=false — purely decorative.
+        }}
+        <svg class="aurora-fp-value__icon"
+             viewBox="0 0 48 48"
+             xmlns="http://www.w3.org/2000/svg"
+             aria-hidden="true"
+             focusable="false">
+            <path d="M8 26 L20 38 L40 12"
+                  stroke="currentColor"
+                  stroke-width="3.5"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  fill="none"/>
+        </svg>
+        <h2 class="aurora-fp-value__title">{{valuetitle}}</h2>
+        <p class="aurora-fp-value__body">{{valuebody}}</p>
+    </div>
+    <div class="aurora-fp-value__notes">
+        <div class="aurora-fp-value__note aurora-fp-value__note--yellow">
+            <h3 class="aurora-fp-value__note-title">{{note1title}}</h3>
+            <p class="aurora-fp-value__note-body">{{note1body}}</p>
+        </div>
+        <div class="aurora-fp-value__note aurora-fp-value__note--white">
+            <h3 class="aurora-fp-value__note-title">{{note2title}}</h3>
+            <p class="aurora-fp-value__note-body">{{note2body}}</p>
+        </div>
+    </div>
+</section>
+
+{{! ================================================================
+    SECTION 4 — CTA PAPER CARD (static yellow sticky note)
+    Yellow #f8db53 background, ink border, physical box-shadow, slight rotation.
+    Contains: heading (ctatitle), body copy (ctabody), one solid-green button.
+    guest → /login/index.php  |  logged-in → /my/
+================================================================ }}
+<section class="aurora-fp-cta d-print-none" aria-labelledby="aurora-fp-cta-heading">
+    <div class="aurora-fp-cta__inner">
+        <div class="aurora-fp-cta__text">
+            <h2 class="aurora-fp-cta__title" id="aurora-fp-cta-heading">{{ctatitle}}</h2>
+            <p class="aurora-fp-cta__body">{{ctabody}}</p>
+        </div>
+        <div class="aurora-fp-cta__actions">
+            {{#guest}}
+            <a class="aurora-fp-cta__btn" href="{{{ctaloginurl}}}">
+                {{ctaguestlabel}} &rarr;
+            </a>
+            {{/guest}}
+            {{#loggedin}}
+            <a class="aurora-fp-cta__btn" href="{{{ctamyurl}}}">
+                {{ctamylabel}} &rarr;
+            </a>
+            {{/loggedin}}
+        </div>
+    </div>
+</section>

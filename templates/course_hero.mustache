@@ -1,0 +1,77 @@
+{{!
+    This file is part of Moodle - http://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+}}
+{{!
+    @template theme_aurora/course_hero
+
+    Aurora course-view hero. Replaces the plain course heading on the course main
+    page. All values are REAL (course name / summary / category, viewable lesson
+    count, active enrolment count, the current user's completion ring + continue
+    target) from core_renderer::aurora_course_hero_context().
+}}
+<div class="aurora-course-hero d-print-none" data-region="aurora-course-hero">
+    <nav class="aurora-course-hero__crumbs" aria-label="breadcrumb">
+        <a href="{{mycoursesurl}}">{{mycourseslabel}}</a>
+        <span aria-hidden="true">/</span>
+        <span class="aurora-course-hero__crumb-current">{{fullname}}</span>
+    </nav>
+
+    <div class="aurora-course-hero__card">
+        <div class="aurora-course-hero__banner{{#hasimage}} aurora-course-hero__banner--hasimage{{/hasimage}}">
+            {{#hasimage}}
+            <img class="aurora-course-hero__img"
+                 src="{{{imageurl}}}"
+                 alt=""
+                 width="1200"
+                 height="400">
+            {{/hasimage}}
+            {{^hasimage}}
+            <span class="aurora-course-hero__glyph" aria-hidden="true">{{initial}}</span>
+            {{/hasimage}}
+        </div>
+        <div class="aurora-course-hero__body">
+            <div class="aurora-course-hero__info">
+                {{#hascategory}}
+                    <span class="aurora-course-hero__chip">{{category}}</span>
+                {{/hascategory}}
+                <h1 class="aurora-course-hero__title">{{fullname}}</h1>
+                {{#hassummary}}
+                    <p class="aurora-course-hero__summary">{{summary}}</p>
+                {{/hassummary}}
+                <div class="aurora-course-hero__meta">
+                    {{#haslessons}}<span>&#128218; {{lessonslabel}}</span>{{/haslessons}}
+                    {{#hasenrolled}}<span>&#128101; {{enrolledlabel}}</span>{{/hasenrolled}}
+                </div>
+            </div>
+
+            {{#hascompletion}}
+                <div class="aurora-course-hero__progress">
+                    <div class="aurora-course-hero__ring">
+                        <svg width="78" height="78" viewBox="0 0 78 78">
+                            <circle class="aurora-course-hero__ring-track" cx="39" cy="39" r="33" fill="none" stroke-width="9"/>
+                            <circle class="aurora-course-hero__ring-fill" cx="39" cy="39" r="33" fill="none" stroke-width="9"
+                                stroke-linecap="round"
+                                stroke-dasharray="{{ringcircumference}}" stroke-dashoffset="{{ringoffset}}"/>
+                        </svg>
+                        <span class="aurora-course-hero__ring-label">{{completionpct}}%</span>
+                    </div>
+                    <div class="aurora-course-hero__completed">{{completedlabel}}</div>
+                    <a href="{{continueurl}}" class="aurora-course-hero__btn">{{continuelabel}} &rarr;</a>
+                </div>
+            {{/hascompletion}}
+        </div>
+    </div>
+</div>
